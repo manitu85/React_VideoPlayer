@@ -3,6 +3,7 @@ import { ThemeProvider } from 'styled-components'
 import Video from '../layout/Video'
 import Playlist from './Playlist'
 import StyledPlayer from '../styles/StyledPlayer';
+import { black } from 'ansi-colors';
 
 const theme = {
   bgcolor: '#353535',
@@ -24,22 +25,43 @@ const themeLight = {
   color: '#353535'
 }
 
-const Player = props => {
+const Player = ({ match, history, location}) => {
   
   const videos = JSON.parse(document.querySelector('[name="videos"]').value)
 
   const [state, setState] = useState({
     videos: videos.playlist,
     activeVideo: videos.playlist[0],
-    nightMode: true,
+    nightMode: false,
     playlistId: videos.playlistId,
     autoplay: false
   })
 
+
+
+  useEffect(() => {
+    const videoId = match.params.activeVideo;
+    if (videoId !== undefined ) {
+      const newActiveVideo = state.videos.findIndex(video => video.id === videoId)
+      setState( prev => ({
+        ...prev,
+        activeVideo: prev.videos[newActiveVideo],
+        autoPlay: location.autoPlay,
+      }));
+    } else  {
+      history.push({
+        pathname: `/${state.activeVideo.id}`,
+        autoplay: false
+      })
+    }
+    
+  }, [history, location.autoplay, match.params.activeVideo, state.activeVideo.id, state.videos ])
+
+  
+
   const nightModeCallback = () => {
 
    
-    
   }
 
   const endCallback = () => {
@@ -49,6 +71,7 @@ const Player = props => {
   const progressCallback = () => {
 
   }
+
 
 return (
 
@@ -71,6 +94,7 @@ return (
       : null
     }
   </ThemeProvider>
+
   ) 
 }
 
