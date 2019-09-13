@@ -1,13 +1,23 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 const GlobalStyle = createGlobalStyle`
-  * {
-    box-sizing: border-box;
+*,
+*:before,
+*:after{
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
   }
-  body {
-    font-size: 10px;
-    font-family: 'Hind', sans-serif;
-  }
-`;
 
-export default GlobalStyle;
+  html {
+    font-size: 62.5%; 
+  }
+
+  body {
+    box-sizing: border-box; 
+    font-size: 1rem;
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+`
+
+export default GlobalStyle

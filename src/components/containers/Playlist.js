@@ -1,14 +1,16 @@
 import React from 'react'
 import PlaylistHeader from '../layout/PlaylistHeader'
 import PlaylistItems from '../containers/PlaylistItems'
-import Nightmode from '../themes/Nightmode';
+import NightMode from '../themes/Nightmode';
+import StyledPlaylist from '../styles/StyledPlaylist';
 
-const ReactPlayer = props => (
-    <>
-      <PlaylistHeader />
-      <PlaylistItems />
-      <Nightmode />
-    </>
+const Playlist = ({ videos, active, nightModeCallback, nightMode }) => (
+  <StyledPlaylist>
+    <NightMode nightModeCallback={nightModeCallback} nightMode={nightMode} />
+    <PlaylistHeader active={active} total={videos.length} />
+    <PlaylistItems videos={videos} active={active} />
+  </StyledPlaylist>
 )
 
-export default ReactPlayer
+export default Playlist
+

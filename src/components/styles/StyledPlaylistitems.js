@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 const StyledPlaylistitems = styled.div`
   padding: 0 20px 0 20px;
@@ -26,6 +26,6 @@ const StyledPlaylistitems = styled.div`
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-`;
+`
 
-export default StyledPlaylistitems;
+export default StyledPlaylistitems

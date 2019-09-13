@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const StyledPlaylistItem = styled.div`
-  font-family: "Hind", sans-serif;
+  font-family: Condensed, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: none;
