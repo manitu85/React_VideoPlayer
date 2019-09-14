@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components'
 import Video from '../layout/Video'
 import Playlist from './Playlist'
 import StyledPlayer from '../styles/StyledPlayer';
-import { black } from 'ansi-colors';
+
 
 const theme = {
   bgcolor: '#353535',
@@ -27,12 +27,12 @@ const themeLight = {
 
 const Player = ({ match, history, location}) => {
   
-  const videos = JSON.parse(document.querySelector('[name="videos"]').value)
+  const videos = JSON.parse(document.querySelector('[name="videos"]').value);
 
   const [state, setState] = useState({
     videos: videos.playlist,
     activeVideo: videos.playlist[0],
-    nightMode: false,
+    nightMode: true,
     playlistId: videos.playlistId,
     autoplay: false
   })
@@ -43,11 +43,13 @@ const Player = ({ match, history, location}) => {
     const videoId = match.params.activeVideo;
     if (videoId !== undefined ) {
       const newActiveVideo = state.videos.findIndex(video => video.id === videoId)
-      setState( prev => ({
-        ...prev,
-        activeVideo: prev.videos[newActiveVideo],
-        autoPlay: location.autoPlay,
+
+      setState( prevState => ({
+        ...prevState,
+        activeVideo: prevState.videos[newActiveVideo],
+        autoplay: location.autoplay,
       }));
+
     } else  {
       history.push({
         pathname: `/${state.activeVideo.id}`,
@@ -55,21 +57,61 @@ const Player = ({ match, history, location}) => {
       })
     }
     
-  }, [history, location.autoplay, match.params.activeVideo, state.activeVideo.id, state.videos ])
+  }, [history, 
+      location.autoplay, 
+      match.params.activeVideo, 
+      state.activeVideo.id, 
+      state.videos ]
+  )
 
   
 
   const nightModeCallback = () => {
-
-   
+      setState( prevState => ({
+        ...prevState,
+        nightMode: !prevState.nightMode 
+      }))
   }
+
 
   const endCallback = () => {
+    const videoId = match.params.activeVideo;
+    // Find index of video array
+    const currVideoIdx = state.videos.findIndex(video => video.id === videoId);
+    // Find next video
+    const nextVideo = currVideoIdx === state.videos.length -1 ? 0 : currVideoIdx + 1;
+
+    history.push({
+      pathname: `${state.videos[nextVideo].id}`,
+      autoplay: false,
+    });
 
   }
 
-  const progressCallback = () => {
+  // const progressCallback = e => {
+  //   if (e.playedSeconds > 10 && e.playedSeconds < 11) {
+  //     const videos = [...state.videos];
+  //     const playedVideo = videos.find(
+  //       video => video.id === state.activeVideo.id,
+  //     );
+  //     playedVideo.played = true;
 
+  //     setState(prevState => ({ ...prevState, videos }));
+  //   }
+  // }
+
+
+  const progressCallback = e => {
+    if (e.playedSeconds > 5 && e.playedSeconds < 6) {
+      setState({
+        ...state,
+        videos: state.videos.map( el => {
+          return el.id === state.activeVideo.id
+            ? {...el, played: true}
+            : el
+        })
+      })
+    }
   }
 
 

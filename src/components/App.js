@@ -10,7 +10,7 @@ const App = () => (
     <>
       <Switch>
         <Route exact path='/'  component={Player} />
-        <Route exact path='/:acitveVideo' component={Player} />
+        <Route exact path='/:activeVideo' component={Player} />
         <Route path='*' component={NotFound} />
       </Switch>
       <GlobalStyle />
