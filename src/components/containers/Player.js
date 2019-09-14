@@ -6,13 +6,13 @@ import StyledPlayer from '../styles/StyledPlayer';
 
 
 const theme = {
-  bgcolor: '#353535',
-  bgcolorItem: '#414141',
-  bgcolorItemActive: '#405c63',
-  bgcolorPlayed: '#526d4e',
+  bgcolor: '#22163b',
+  bgcolorItem: '#451f55',
+  bgcolorItemActive: '#724e91',
+  bgcolorPlayed: '#e54f6d',
   border: 'none',
   borderPlayerd: 'none',
-  color: '#fefefe'
+  color: '#f8c630'
 }
 
 const themeLight = {
@@ -25,18 +25,23 @@ const themeLight = {
   color: '#353535'
 }
 
-const Player = ({ match, history, location}) => {
+const Player = ({ match, history, location }) => {
   
   const videos = JSON.parse(document.querySelector('[name="videos"]').value);
-
+  const savedState = JSON.parse(localStorage.getItem(`${videos.playlistId}`))
+  
   const [state, setState] = useState({
-    videos: videos.playlist,
-    activeVideo: videos.playlist[0],
-    nightMode: true,
-    playlistId: videos.playlistId,
-    autoplay: false
+    videos: savedState ? savedState.videos : videos.playlist,
+    activeVideo: savedState ? savedState.activeVideo : videos.playlist[0],
+    nightMode: savedState ? savedState.nightMode : true,
+    playlistId: savedState ? savedState.playlistId : videos.playlistId,
+    autoplay: savedState ? savedState.autoplay : false
   })
 
+  // Sync Local storage with state
+  useEffect(() => {
+    localStorage.setItem(`${state.playlistId}`,JSON.stringify({ ...state }))
+  }, [state])
 
 
   useEffect(() => {
@@ -88,35 +93,20 @@ const Player = ({ match, history, location}) => {
 
   }
 
-  // const progressCallback = e => {
-  //   if (e.playedSeconds > 10 && e.playedSeconds < 11) {
-  //     const videos = [...state.videos];
-  //     const playedVideo = videos.find(
-  //       video => video.id === state.activeVideo.id,
-  //     );
-  //     playedVideo.played = true;
-
-  //     setState(prevState => ({ ...prevState, videos }));
-  //   }
-  // }
-
-
   const progressCallback = e => {
     if (e.playedSeconds > 5 && e.playedSeconds < 6) {
       setState({
         ...state,
-        videos: state.videos.map( el => {
+        videos: state.videos.map(el => {
           return el.id === state.activeVideo.id
-            ? {...el, played: true}
+            ? { ...el, played: true }
             : el
         })
       })
     }
   }
 
-
 return (
-
   <ThemeProvider theme={state.nightMode ? theme : themeLight} >
     {state.videos !== null 
       ? ( <StyledPlayer>
@@ -136,7 +126,6 @@ return (
       : null
     }
   </ThemeProvider>
-
   ) 
 }
 
